@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Confirm Delete — Wellview Clinic{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="form-card delete-card">
+        <span class="eyebrow eyebrow-danger">Remove from ledger</span>
+        <h1>Delete this appointment?</h1>
+        <p class="form-sub">
+            This will permanently remove the entry below. This action cannot be undone.
+        </p>
+
+        <div class="delete-preview">
+            <div class="detail-card-header">
+                <span class="status-label {{ appointment.status_badge_class }}">{{ appointment.status }}</span>
+                <span class="ticket-id large">WV-{{ appointment.pk|stringformat:"04d" }}</span>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Patient</span>
+                    <span class="field-value">{{ appointment.patient_name }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Doctor</span>
+                    <span class="field-value">Dr. {{ appointment.doctor_name }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Department</span>
+                    <span class="field-value">{{ appointment.department }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Date &amp; Time</span>
+                    <span class="field-value">{{ appointment.appointment_date|date:"M d, Y" }} · {{ appointment.appointment_time|time:"H:i" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">Yes, delete permanently</button>
+                <a href="{% url 'appointment-detail' appointment.pk %}" class="btn btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

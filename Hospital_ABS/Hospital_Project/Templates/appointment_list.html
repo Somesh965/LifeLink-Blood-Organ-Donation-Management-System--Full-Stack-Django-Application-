@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Appointment Ledger — Wellview Clinic{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Patient Ledger</span>
+        <h1>All Appointments</h1>
+    </div>
+    <a href="{% url 'appointment-create' %}" class="btn btn-primary">+ Book Appointment</a>
+</section>
+
+<section class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="status">Status</label>
+            <select name="status" id="status" class="form-control">
+                <option value="">All</option>
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="department">Department</label>
+            <select name="department" id="department" class="form-control">
+                <option value="">All</option>
+                {% for value, label in department_choices %}
+                    <option value="{{ value }}" {% if selected_department == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        {% if selected_status or selected_department %}
+            <a href="{% url 'appointment-list' %}" class="btn btn-ghost btn-small">Clear</a>
+        {% endif %}
+    </form>
+</section>
+
+<section class="table-section">
+    {% if appointments %}
+    <div class="table-wrap">
+        <table class="ledger-table">
+            <thead>
+                <tr>
+                    <th>Ticket</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Date &amp; Time</th>
+                    <th>Status</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td class="ticket-cell">WV-{{ appt.pk|stringformat:"04d" }}</td>
+                    <td>{{ appt.patient_name }}</td>
+                    <td>Dr. {{ appt.doctor_name }}</td>
+                    <td>{{ appt.department }}</td>
+                    <td>{{ appt.appointment_date|date:"M d, Y" }} · {{ appt.appointment_time|time:"H:i" }}</td>
+                    <td><span class="status-label {{ appt.status_badge_class }}">{{ appt.status }}</span></td>
+                    <td class="actions-col">
+                        <a href="{% url 'appointment-detail' appt.pk %}" class="action-link" title="View">View</a>
+                        <a href="{% url 'appointment-update' appt.pk %}" class="action-link" title="Edit">Edit</a>
+                        <a href="{% url 'appointment-delete' appt.pk %}" class="action-link action-danger" title="Delete">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No appointments match these filters.</p>
+            <a href="{% url 'appointment-create' %}" class="btn btn-primary">Book an appointment</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+.hero-section{
+
+    width:100%;
+    height:100vh;
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+}
+
+.overlay{
+
+    width:100%;
+    height:100%;
+
+    background:rgba(255,255,255,.20);
+
+}
+
+.stats{
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:flex-end;
+
+    height:100%;
+
+    gap:30px;
+
+}
+
+.stats h2{
+
+    color:white;
+    font-size:40px;
+    font-weight:bold;
+
+}
+
+.stats p{
+
+    color:white;
+    font-size:18px;
+
+}

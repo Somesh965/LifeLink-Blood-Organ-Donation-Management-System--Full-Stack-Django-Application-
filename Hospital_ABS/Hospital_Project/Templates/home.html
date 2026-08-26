@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Wellview Clinic — Book Your Appointment{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <span class="eyebrow">Patient Ledger · Wellview Clinic</span>
+        <h1>One desk.<br>Every appointment, on the record.</h1>
+        <p class="hero-sub">
+            Book a slot with the right department, track its status, and keep every visit
+            in one tidy ledger — from first symptom note to follow-up.
+        </p>
+        <div class="hero-actions">
+            <a href="{% url 'appointment-create' %}" class="btn btn-primary">Book Appointment</a>
+            <a href="{% url 'appointment-list' %}" class="btn btn-ghost">View Ledger</a>
+        </div>
+    </div>
+
+    <div class="hero-ledger">
+        <div class="ledger-card-stack">
+            <div class="ledger-stat">
+                <span class="stat-number">{{ total_appointments }}</span>
+                <span class="stat-label">Total Logged</span>
+            </div>
+            <div class="ledger-stat-row">
+                <div class="ledger-stat-mini">
+                    <span class="dot dot-booked"></span>
+                    <span class="stat-number-mini">{{ booked_count }}</span>
+                    <span class="stat-label-mini">Booked</span>
+                </div>
+                <div class="ledger-stat-mini">
+                    <span class="dot dot-completed"></span>
+                    <span class="stat-number-mini">{{ completed_count }}</span>
+                    <span class="stat-label-mini">Completed</span>
+                </div>
+                <div class="ledger-stat-mini">
+                    <span class="dot dot-cancelled"></span>
+                    <span class="stat-number-mini">{{ cancelled_count }}</span>
+                    <span class="stat-label-mini">Cancelled</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="departments-strip">
+    <span class="strip-label">Departments on duty</span>
+    <div class="chip-row">
+        <span class="chip">Cardiology</span>
+        <span class="chip">Dermatology</span>
+        <span class="chip">Orthopedics</span>
+        <span class="chip">General Medicine</span>
+        <span class="chip">ENT</span>
+    </div>
+</section>
+
+<section class="recent-section">
+    <div class="section-heading">
+        <h2>Latest entries</h2>
+        <a href="{% url 'appointment-list' %}" class="link-arrow">See full ledger →</a>
+    </div>
+
+    {% if recent_appointments %}
+        <div class="recent-grid">
+            {% for appt in recent_appointments %}
+            <a href="{% url 'appointment-detail' appt.pk %}" class="recent-card">
+                <div class="recent-card-top">
+                    <span class="ticket-id">WV-{{ appt.pk|stringformat:"04d" }}</span>
+                    <span class="status-label {{ appt.status_badge_class }}">{{ appt.status }}</span>
+                </div>
+                <h3>{{ appt.patient_name }}</h3>
+                <p class="recent-meta">{{ appt.department }} · Dr. {{ appt.doctor_name }}</p>
+                <p class="recent-date">{{ appt.appointment_date|date:"M d, Y" }} at {{ appt.appointment_time|time:"H:i" }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No appointments logged yet.</p>
+            <a href="{% url 'appointment-create' %}" class="btn btn-primary">Book the first appointment</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
